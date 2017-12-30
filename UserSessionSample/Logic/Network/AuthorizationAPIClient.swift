@@ -7,10 +7,10 @@ import Foundation
 
 class AuthorizationAPIClient {
 
-    func loginWithUsername(username: String, password: String, completion: (UserSessionPrototype?, NSError?) -> Void) {
-        dispatch_async(dispatch_get_main_queue()) {
-            let userId = String(format: "%08x", NSUUID().UUIDString.hash)
-            let json: [String: AnyObject] = [
+    func loginWithUsername(username: String, password: String, completion: @escaping (UserSessionPrototype?, NSError?) -> Void) {
+        DispatchQueue.main.async() {
+            let userId = String(format: "%08x", NSUUID().uuidString.hash)
+            let json: [String: Any] = [
                 "result": [
                     "user": [
                         "id": userId,
@@ -20,7 +20,7 @@ class AuthorizationAPIClient {
                 ]
             ]
 
-            completion(UserSessionPrototype(response: json), nil)
+            completion(UserSessionPrototype(response: json as [String : AnyObject]), nil)
         }
     }
 }

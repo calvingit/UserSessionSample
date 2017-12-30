@@ -8,7 +8,7 @@ import UIKit
 
 class LoginViewController: UIViewController {
     
-    var didSelectLogin: (UIViewController -> Void)?
+    var didSelectLogin: ((UIViewController) -> Void)?
     
     @IBAction
     private func login(sender: UIControl!) {

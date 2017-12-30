@@ -25,15 +25,15 @@ class RootRouter {
     // mark: - Execution
     
     func execute() {
-        let loginViewController = storyboard.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
+        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         loginViewController.didSelectLogin = { [unowned self] sender in
-            self.executeLogin(sender)
+            self.executeLogin(sender: sender)
         }
         
         navigationController.viewControllers = [loginViewController]
         
         if let restoredUserSession = userSessionController.restoreUserSession() {
-            presentOpenedUserSession(restoredUserSession, animated: false)
+            presentOpenedUserSession(userSession: restoredUserSession, animated: false)
         }
         
         window.rootViewController = navigationController
@@ -41,19 +41,19 @@ class RootRouter {
     }
     
     private func executeLogin(sender: UIViewController) {
-        userSessionController.openSession(username: "username", password: "password") { userSession, error in
+        userSessionController.openSession(username: "username", password: "password") {[unowned self] userSession, error in
             // always will be a non-nil object
-            self.presentOpenedUserSession(userSession!, animated: true)
+            self.presentOpenedUserSession(userSession: userSession!, animated: true)
         }
     }
     
     private func executeLogout() {
         userSessionController.closeSession()
-        navigationController.popToRootViewControllerAnimated(true)
+        navigationController.popToRootViewController(animated: true)
     }
     
     private func presentOpenedUserSession(userSession: UserSession, animated: Bool) {
-        let userSessionViewController = storyboard.instantiateViewControllerWithIdentifier("UserSessionViewController") as! UserSessionViewController
+        let userSessionViewController = storyboard.instantiateViewController(withIdentifier: "UserSessionViewController") as! UserSessionViewController
 
         userSessionViewController.userSession = userSession
         userSessionViewController.didSelectLogout = { [unowned self] sender in

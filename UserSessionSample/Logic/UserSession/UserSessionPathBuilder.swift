@@ -12,18 +12,18 @@ class UserSessionPathBuilder {
         identifier = userSession.identifier
     }
 
-    private func pathForDirectory(directory: NSSearchPathDirectory) -> String {
-        let directory = NSSearchPathForDirectoriesInDomains(directory, .UserDomainMask, true).first as! String
-        return directory.stringByAppendingPathComponent("user_session")
+    private func pathForDirectory(directory: FileManager.SearchPathDirectory) -> URL {
+        let directory = NSSearchPathForDirectoriesInDomains(directory, .userDomainMask, true).first!
+        return URL(string: directory)!.appendingPathComponent("user_session")
     }
 
     // ~/Documents/user_session/identifier/
     func documentDirectory() -> String {
-        return pathForDirectory(.DocumentDirectory).stringByAppendingPathComponent(identifier)
+        return pathForDirectory(directory: .documentDirectory).appendingPathComponent(identifier).absoluteString
     }
 
     // ~/Library/Caches/user_session/identifier/
     func cachesDirectory() -> String {
-        return pathForDirectory(.CachesDirectory).stringByAppendingPathComponent(identifier)
+        return pathForDirectory(directory: .cachesDirectory).appendingPathComponent(identifier).relativeString
     }
 }

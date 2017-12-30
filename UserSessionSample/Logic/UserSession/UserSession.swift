@@ -38,7 +38,7 @@ class UserSession {
     func open() -> Bool {
         precondition(state == .Undefined)
 
-        if let prototype = sessionPrototype where !bootstrapFromPrototype(prototype) {
+        if let prototype = sessionPrototype, !bootstrapFromPrototype(prototype: prototype) {
             state = .Invalid
             return false
         }

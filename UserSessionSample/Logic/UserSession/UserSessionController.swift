@@ -8,8 +8,8 @@ import Foundation
 class UserSessionController {
 
     // MARK: - Init
-    let userDefaults: NSUserDefaults
-    init(userDefaults: NSUserDefaults) {
+    let userDefaults: UserDefaults
+    init(userDefaults: UserDefaults) {
         self.userDefaults = userDefaults
     }
 
@@ -17,7 +17,7 @@ class UserSessionController {
     private(set) var userSession: UserSession? {
         didSet {
             oldValue?.close()
-            userSession?.open()
+            _ = userSession?.open()
 
             userSessionIdentifier = userSession?.identifier
         }
@@ -27,7 +27,7 @@ class UserSessionController {
 
     private let apiClient = AuthorizationAPIClient()
 
-    func openSession(#username: String, password: String, completion: (UserSession?, NSError?) -> Void) {
+    func openSession(username: String, password: String, completion: @escaping (UserSession?, NSError?) -> Void) {
         let requestCompletion: (UserSessionPrototype?, NSError?) -> Void = { prototype, error in
             if let prototype = prototype {
                 self.userSession = UserSession(prototype: prototype)
@@ -37,7 +37,7 @@ class UserSessionController {
             }
         }
 
-        return apiClient.loginWithUsername(username, password: password, completion: requestCompletion)
+        return apiClient.loginWithUsername(username: username, password: password, completion: requestCompletion)
     }
 
     func closeSession() {
@@ -49,10 +49,10 @@ class UserSessionController {
     private static let userSessionKey = "your.app.bundle.id.userSession"
     private var userSessionIdentifier: String? {
         get {
-            return userDefaults.objectForKey(UserSessionController.userSessionKey) as? String
+            return userDefaults.object(forKey: UserSessionController.userSessionKey) as? String
         }
         set {
-            userDefaults.setObject(newValue, forKey: UserSessionController.userSessionKey)
+            userDefaults.set(newValue, forKey: UserSessionController.userSessionKey)
             userDefaults.synchronize()
         }
     }

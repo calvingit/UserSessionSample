@@ -20,7 +20,7 @@ class UserSessionViewController: UIViewController {
     
     var userSession: UserSession? {
         didSet {
-            if isViewLoaded() {
+            if isViewLoaded {
                 updateVisibleState()
             }
         }
@@ -28,14 +28,14 @@ class UserSessionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        let barItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(UserSessionViewController.logout))
+        self.navigationItem.leftBarButtonItem = barItem;
         updateVisibleState()
     }
     
-    var didSelectLogout: (UIViewController -> Void)?
+    var didSelectLogout: ((UIViewController) -> Void)?
     
-    @IBAction
-    private func logout(sender: UIControl!) {
+    @objc func logout() {
         didSelectLogout?(self)
     }
 }
